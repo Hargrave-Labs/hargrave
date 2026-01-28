@@ -1,0 +1,309 @@
+.service-pillars-section {
+    padding: 120px 0;
+    position: relative;
+    /* Force Purple/Blue theme for this section */
+    --theme-color: #a855f7;
+    --theme-secondary-color: #3b82f6;
+}
+
+.service-header {
+    text-align: center;
+    margin-bottom: 80px;
+    padding: 0 20px;
+}
+
+.service-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 20px;
+    letter-spacing: -1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.service-highlight {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-secondary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop_shadow(0 0 20px color-mix(in srgb, var(--theme-color), transparent 70%));
+    position: relative;
+}
+
+.service-subtitle {
+    color: #a1a1aa;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.pillars-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 500px;
+    /* Fixed height for accordion */
+    padding: 0 20px;
+}
+
+@property --pillar-spotlight-color {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: rgba(255, 255, 255, 0.4);
+}
+
+.pillar-card {
+    flex: 1;
+    /* All equal by default */
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: flex 0.5s cubic-bezier(0.25, 1, 0.5, 1), --pillar-spotlight-color 0.5s ease;
+    background: rgba(255, 255, 255, 0.02);
+    /* Subtle static border to catch light */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /* Slight depth */
+
+    --pillar-spotlight-color: rgba(255, 255, 255, 0.4);
+}
+
+.pillar-card.active {
+    flex: 2.5;
+    /* Expand active item */
+    --pillar-spotlight-color: color-mix(in srgb, var(--theme-color), var(--theme-secondary-color));
+}
+
+/* Spotlight Border Effect */
+.pillar-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    padding: 1px;
+    /* Border width */
+    background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            var(--pillar-spotlight-color),
+            transparent 40%);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 3;
+    /* Increased from 2 to sit ABOVE .pillar-content (z-index: 2) */
+}
+
+/* Inner Glow Effect */
+.pillar-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            color-mix(in srgb, var(--theme-color), transparent 94%),
+            transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Previously pillar-background - Removed */
+
+.pillar-content {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.pillar-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    /* Ensure relative for absolute children */
+    /* overflow: hidden removed to allow border ::after to show */
+}
+
+/* 1. Refraction/Parallax Light for Icon */
+.pillar-icon-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: radial-gradient(circle at var(--icon-mouse-x) var(--icon-mouse-y),
+            rgba(255, 255, 255, 0.4),
+            transparent 70%);
+    opacity: 0.5;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s;
+}
+
+/* 2. Dynamic Spotlight Border for Icon */
+.pillar-icon-wrapper::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 12px;
+    padding: 1px;
+    /* Balanced radius (350px) with sharp cutoff (40%) - matching FAQ */
+    background: radial-gradient(350px circle at var(--icon-mouse-x) var(--icon-mouse-y),
+            rgba(255, 255, 255, 0.9),
+            transparent 40%);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.8;
+    transition: opacity 0.5s ease;
+}
+
+/* Active State: Fade out dynamic spotlight border (so static one shows) */
+.pillar-card.active .pillar-icon-wrapper::after {
+    opacity: 0;
+}
+
+/* Static Active Border for Icon (Helper Div) */
+.pillar-icon-border-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    /* Match wrapper radius */
+    padding: 1px;
+    /* Border width */
+    background: linear-gradient(135deg, var(--theme-color), var(--theme-secondary-color));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.pillar-card.active .pillar-icon-border-active {
+    opacity: 1;
+}
+
+
+
+.pillar-subtitle {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 10px;
+}
+
+.pillar-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 15px;
+    white-space: normal;
+    /* Allow wrapping */
+    line-height: 1.1;
+}
+
+.pillar-description {
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 1rem;
+
+    /* Reveal logic */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    /* Limit lines initially */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.pillar-card.active .pillar-description {
+    opacity: 1;
+}
+
+.pillar-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    text-decoration: none;
+}
+
+.pillar-action:hover {
+    color: var(--theme-color);
+}
+
+.pillar-card.active .pillar-action {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+    .pillars-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .pillar-card {
+        height: 300px;
+        flex: none;
+        /* Disable flex scaling */
+    }
+
+    .pillar-card.active {
+        flex: none;
+    }
+}

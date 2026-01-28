@@ -1,0 +1,259 @@
+:root {
+    --color-obsidian: #050505;
+    --color-white: #ffffff;
+    --color-glass-border: rgba(255, 255, 255, 0.1);
+    --color-glass-bg: rgba(255, 255, 255, 0.03);
+    --color-purple-glow: color-mix(in srgb, var(--theme-color), transparent 60%);
+    --color-blue-glow: color-mix(in srgb, var(--theme-secondary-color), transparent 60%);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-obsidian);
+    color: var(--color-white);
+    /* overflow: hidden; Removed to allow scrolling */
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Clip the scaled background */
+}
+
+/* 1. Background Atmosphere */
+.background-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    /* Scaled up for movement */
+    height: 120%;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, var(--color-obsidian) 70%);
+    /* Wave gradient approximation */
+    background-image:
+        radial-gradient(ellipse at 20% 50%, var(--color-purple-glow) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 60%, var(--color-blue-glow) 0%, transparent 40%);
+    transform: scale(1.1);
+}
+
+.content-container {
+    display: flex;
+    flex-direction: row;
+    /* Side by side on desktop */
+    align-items: center;
+    justify-content: space-between;
+    /* Spread them out */
+    z-index: 10;
+    width: 100%;
+    max-width: 1200px;
+    /* Constrain width for better layout */
+    padding: 0 20px;
+    /* Add some padding */
+    gap: 40px;
+    /* Gap between text and visual */
+}
+
+/* 2. Typography */
+.typography-container {
+    text-align: left;
+    /* Left align for side-by-side */
+    flex: 1;
+    /* Take up available space */
+    max-width: 50%;
+}
+
+@media (max-width: 900px) {
+    .content-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 60px;
+        padding-top: 100px;
+        /* Space from top */
+    }
+
+    .typography-container {
+        text-align: center;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .glass-card-wrapper {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 2.5rem;
+        letter-spacing: -1px;
+    }
+
+    .hero-tagline {
+        font-size: 1.1rem;
+    }
+
+    .glass-card-wrapper {
+        height: 280px;
+    }
+
+    .content-container {
+        padding-top: 80px;
+        gap: 40px;
+    }
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin: 0;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+
+    /* Initial State */
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-tagline {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #a1a1aa;
+    margin-top: 10px;
+    letter-spacing: 1px;
+
+    /* Initial State */
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* 3. Glass Interface */
+.glass-card-wrapper {
+    position: relative;
+    width: 100%;
+    /* Flexible within its flex item */
+    max-width: 600px;
+    /* Max width constraint */
+    flex: 1;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+
+    /* Initial State */
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(10px);
+}
+
+.glass-card {
+    width: 100%;
+    height: 100%;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.02);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Glass Card Internal details */
+.card-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+}
+
+.dot {
+    width: 20px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
+
+.line {
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.card-body {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 1px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px white;
+}
+
+
+/* 4. Neural Pathways (SVG) */
+.svg-overlay {
+    position: absolute;
+    top: -20%;
+    /* Extend outside card */
+    left: 0;
+    width: 100%;
+    height: 140%;
+    /* Extend well below */
+    pointer-events: none;
+    z-index: 2;
+    /* On top of path content inside but aligned */
+}
+
+.neural-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.path-line {
+    /* Initial state hidden via dasharray */
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    filter: drop-shadow(0 0 5px var(--color-purple-glow));
+}
+
+.data-orb {
+    opacity: 0;
+    filter: drop-shadow(0 0 5px white);
+}

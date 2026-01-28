@@ -1,0 +1,307 @@
+.faq-section {
+    padding: 120px 0;
+    position: relative;
+    z-index: 5;
+    /* Maintain theme color (Purple/Blue) from Service Pillars */
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 20px;
+}
+
+.faq-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 20px;
+    letter-spacing: -1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.faq-highlight {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-secondary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px color-mix(in srgb, var(--theme-color), transparent 70%));
+}
+
+.faq-subtitle {
+    color: #a1a1aa;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Enable smooth transition of color variables */
+@property --card-spotlight-color {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: rgba(255, 255, 255, 0.15);
+}
+
+@property --icon-spotlight-color {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: rgba(255, 255, 255, 0.9);
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Consistent with other sections */
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1), --card-spotlight-color 0.5s ease, --icon-spotlight-color 0.5s ease;
+    position: relative;
+
+    /* Default Spotlight Colors */
+    --card-spotlight-color: rgba(255, 255, 255, 0.15);
+    --icon-spotlight-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Active State Colors */
+.faq-item.active {
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+
+    /* Transition to Purple/Blue Mix */
+    --card-spotlight-color: color-mix(in srgb, var(--theme-color), var(--theme-secondary-color));
+    --icon-spotlight-color: color-mix(in srgb, var(--theme-color), var(--theme-secondary-color));
+}
+
+.faq-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Spotlight Border Effect */
+.faq-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    padding: 1px;
+    /* Border width */
+    background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            var(--card-spotlight-color),
+            transparent 40%);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Removed specific active override as it's now handled by variable transition */
+
+/* Inner Glow Effect */
+.faq-item::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            color-mix(in srgb, var(--theme-color), transparent 94%),
+            transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Question Row */
+.faq-question {
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.faq-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    /* Base glass */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--theme-secondary-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+    /* Strong blur */
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    /* overflow: hidden removed to allow border ::after to show */
+}
+
+/* Refraction/Parallax Light for Icon */
+.faq-icon-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* Ensure roundness without overflow:hidden */
+    /* Use relative variables for precise alignment */
+    background: radial-gradient(circle at var(--icon-mouse-x) var(--icon-mouse-y),
+            rgba(255, 255, 255, 0.4),
+            transparent 70%);
+    /* Extended reach slightly */
+    opacity: 0.5;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s;
+}
+
+/* Icon Dynamic Spotlight Border */
+.faq-icon-wrapper::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 50%;
+    padding: 1px;
+    /* Balanced radius (350px) with sharp cutoff (40%) to ensure early activation but strong directionality */
+    background: radial-gradient(350px circle at var(--icon-mouse-x) var(--icon-mouse-y),
+            var(--icon-spotlight-color),
+            transparent 40%);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.8;
+}
+
+.faq-item:hover .faq-icon-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    /* border-color removed to rely on dynamic border */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+    /* Reduced shadow intensity */
+}
+
+/* Active State: Fade out dynamic spotlight border */
+.faq-item.active .faq-icon-wrapper::after {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Static Active Border (Helper Div) */
+.faq-icon-border-active {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 50%;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--theme-color), var(--theme-secondary-color));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 4;
+    /* layer above dynamic border */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.faq-item.active .faq-icon-border-active {
+    opacity: 1;
+}
+
+.faq-item.active .faq-icon-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    /* Maintain glass effect */
+    color: #fff;
+    /* border-color already transparent */
+    /* Removed purple glow/shadow */
+}
+
+/* Ensure default border is subtle/transparent so dynamic one pops */
+.faq-icon-wrapper {
+    /* ... existing props ... */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Faint static border */
+}
+
+/* Answer Area */
+.faq-answer-wrapper {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    /* Will be animated by GSAP */
+}
+
+.faq-answer {
+    padding: 0 30px 30px 30px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .faq-title {
+        font-size: 2.5rem;
+    }
+
+    .faq-question {
+        padding: 20px;
+    }
+
+    .faq-question h3 {
+        font-size: 1.1rem;
+        padding-right: 15px;
+        /* Prevent overlap with icon */
+    }
+
+    .faq-answer {
+        padding: 0 20px 20px 20px;
+    }
+}

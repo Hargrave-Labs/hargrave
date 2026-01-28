@@ -1,0 +1,7 @@
+/* App.css cleared for Hero component specific styles */
+:root {
+    --theme-color: #a855f7;
+    /* Default Purple */
+    --theme-secondary-color: #3b82f6;
+    /* Default Blue */
+}
