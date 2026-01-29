@@ -298,12 +298,20 @@
     }
 
     .pillar-card {
-        height: 300px;
+        height: auto;
+        /* Allow card to grow with content */
+        min-height: 300px;
         flex: none;
         /* Disable flex scaling */
     }
 
     .pillar-card.active {
         flex: none;
+    }
+
+    .pillar-description {
+        -webkit-line-clamp: unset;
+        /* Show full text on mobile */
+        line-clamp: unset;
     }
 }
