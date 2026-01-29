@@ -12,7 +12,7 @@ const DiscoveryCall = () => {
     useEffect(() => {
         (async function () {
             const cal = await getCalApi({});
-            cal("ui", { "theme": "dark", "styles": { "branding": { "brandColor": "#8b5cf6" } }, "hideEventTypeDetails": false, "layout": "column_view" });
+            cal("ui", { "theme": "dark", "styles": { "branding": { "brandColor": "#8b5cf6" } }, "hideEventTypeDetails": true, "layout": "month_view" });
         })();
 
         // Animation for entrance
@@ -38,9 +38,9 @@ const DiscoveryCall = () => {
 
                     <div className="calendar-wrapper">
                         <Cal
-                            calLink="chris-patrick-hargrave/30min"
-                            style={{ width: "100%", height: "100%", overflow: "scroll" }}
-                            config={{ layout: 'column_view', theme: 'dark' }}
+                            calLink="hargrave-7dk4p6/30min"
+                            style={{ width: "100%", height: "100%", overflow: "hidden" }}
+                            config={{ layout: 'month_view', theme: 'dark', hideEventTypeDetails: true }}
                         />
                     </div>
                 </div>
