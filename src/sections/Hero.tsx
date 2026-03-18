@@ -58,45 +58,38 @@ export default function Hero() {
 
             {/* Heading — each word wrapped for stagger animation */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white tracking-[-0.04em] leading-[1.0]">
-              {'Design at the'.split(' ').map((word, i) => (
+              {'Empowering Your'.split(' ').map((word, i) => (
                 <span key={i} className="hero-title-word inline-block mr-[0.25em]">{word}</span>
               ))}
-              <span className="hero-title-word inline-block italic font-light mr-[0.25em]">speed</span>
-              <span className="hero-title-word inline-block mr-[0.25em]">of</span>
               <br className="hidden sm:block" />
-              <span className="hero-title-word inline-block italic font-light">thought.</span>
+              {'Business with'.split(' ').map((word, i) => (
+                <span key={`b${i}`} className="hero-title-word inline-block mr-[0.25em]">{word}</span>
+              ))}
+              <span className="hero-title-word inline-block italic font-light mr-[0.25em]">Smarter</span>
+              <br className="hidden sm:block" />
+              <span className="hero-title-word inline-block italic font-light">Digital Solutions</span>
             </h1>
 
-            {/* Description */}
-            <p className="hero-desc mt-8 text-lg lg:text-xl text-white/50 leading-relaxed max-w-xl font-light">
-              Premium AI automation and bespoke web design. We turn ambitious ideas
-              into production-ready digital experiences — in days, not months.
+            {/* Subheadline */}
+            <p className="hero-desc mt-6 text-xl lg:text-2xl text-white/70 leading-relaxed font-light max-w-2xl">
+              At Hargrave Labs, we combine cutting-edge AI automation with expert web development to help your business scale efficiently and thrive.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 mt-10">
               <motion.a
-                href="#portfolio"
-                onClick={(e) => { e.preventDefault(); scrollTo('#portfolio'); }}
+                href="#services"
+                onClick={(e) => { e.preventDefault(); scrollTo('#services'); }}
                 className="hero-cta inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-white text-black text-sm font-medium"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
               >
-                See it in action
+                Learn More About Our Services
                 <span className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </span>
-              </motion.a>
-              <motion.a
-                href="#services"
-                onClick={(e) => { e.preventDefault(); scrollTo('#services'); }}
-                className="hero-cta inline-flex items-center px-7 py-3.5 rounded-full border border-white/20 text-white text-sm font-medium backdrop-blur-sm"
-                whileHover={{ scale: 1.04, backgroundColor: 'rgba(255,255,255,0.05)' }}
-                whileTap={{ scale: 0.97 }}
-              >
-                View Services
               </motion.a>
             </div>
           </div>

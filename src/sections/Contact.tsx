@@ -112,22 +112,22 @@ export default function Contact() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
-                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+                <input type="hidden" name="access_key" value="87c30b6d-7ab7-48b0-942d-89535f0216ed" />
                 <input type="hidden" name="subject" value="New enquiry from Hargrave Labs website" />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                   <div>
                     <label className={labelClass}>First Name</label>
-                    <input name="first_name" placeholder="Chris" required className={inputClass} />
+                    <input name="first_name" placeholder="John" required className={inputClass} />
                   </div>
                   <div>
                     <label className={labelClass}>Last Name</label>
-                    <input name="last_name" placeholder="Patrick" className={inputClass} />
+                    <input name="last_name" placeholder="Smith" className={inputClass} />
                   </div>
                 </div>
                 <div>
                   <label className={labelClass}>Work Email</label>
-                  <input name="email" type="email" placeholder="chris@company.com" required className={inputClass} />
+                  <input name="email" type="email" placeholder="john.smith@company.com" required className={inputClass} />
                 </div>
                 <div>
                   <label className={labelClass}>Company Size</label>
