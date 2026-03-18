@@ -7,6 +7,18 @@ import {
   MotionValue,
 } from 'framer-motion';
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 export const HeroParallax = ({
   products,
 }: {
@@ -16,6 +28,7 @@ export const HeroParallax = ({
     thumbnail: string;
   }[];
 }) => {
+  const isMobile = useIsMobile();
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
@@ -28,29 +41,43 @@ export const HeroParallax = ({
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
   const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
+    useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 1000]),
     springConfig
   );
   const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1000]),
+    useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1000]),
     springConfig
   );
   const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [15, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [isMobile ? 0 : 15, 0]),
     springConfig
   );
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
+    useTransform(scrollYProgress, [0, 0.2], [isMobile ? 1 : 0.2, 1]),
     springConfig
   );
   const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [20, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [isMobile ? 0 : 20, 0]),
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(scrollYProgress, [0, 0.2], [isMobile ? 0 : -700, isMobile ? 0 : 500]),
     springConfig
   );
+
+  // Mobile: simplified static layout without scroll-driven parallax
+  if (isMobile) {
+    return (
+      <div ref={ref} className="relative section-dark py-20 overflow-hidden">
+        <Header />
+        <div className="px-4 space-y-4 pb-8">
+          {firstRow.slice(0, 3).map((product) => (
+            <MobileProductCard product={product} key={product.title} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -110,6 +137,37 @@ export const Header = () => {
         We transform your vision into reality with sophisticated technology and elegant design.
       </p>
     </div>
+  );
+};
+
+const MobileProductCard = ({
+  product,
+}: {
+  product: {
+    title: string;
+    link: string;
+    thumbnail: string;
+  };
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="relative h-48 w-full rounded-2xl overflow-hidden border border-white/10"
+    >
+      <img
+        src={product.thumbnail}
+        className="object-cover absolute h-full w-full inset-0"
+        alt={product.title}
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      <h2 className="absolute bottom-4 left-4 text-white font-medium tracking-[-0.02em] text-sm">
+        {product.title}
+      </h2>
+    </motion.div>
   );
 };
 

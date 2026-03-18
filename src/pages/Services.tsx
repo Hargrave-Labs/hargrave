@@ -58,7 +58,7 @@ function ServiceDetail({
       duration: 0.8,
       stagger: 0.1,
       ease: 'power3.out',
-      scrollTrigger: { trigger: ref.current, start: 'top 80%' },
+      scrollTrigger: { trigger: ref.current, start: 'top 80%', fastScrollEnd: true },
     });
   }, [], ref);
 
@@ -124,7 +124,7 @@ function Process() {
       duration: 0.7,
       stagger: 0.15,
       ease: 'power3.out',
-      scrollTrigger: { trigger: ref.current, start: 'top 80%' },
+      scrollTrigger: { trigger: ref.current, start: 'top 80%', fastScrollEnd: true },
     });
   }, [], ref);
 

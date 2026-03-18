@@ -161,3 +161,18 @@
     color: #34D399;
   }
 }
+
+/* Mobile scroll performance */
+@media (max-width: 767px) {
+  .section-dark {
+    will-change: auto;
+  }
+
+  /* Disable backdrop-filter on mobile during scroll for perf */
+  .glass-card,
+  .glass,
+  .glass-strong {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}

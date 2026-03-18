@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -18,24 +18,38 @@ const steps = [
 export default function Services() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  const visualY = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  // Disable parallax on mobile — the visual is hidden anyway (lg:block)
+  const visualY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [80, -80]);
 
   useGSAP(() => {
     if (!sectionRef.current) return;
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        fastScrollEnd: true,
+      },
     });
     tl.from('.srv-label', { y: 20, opacity: 0, duration: 0.5 })
       .from('.srv-title', { y: 30, opacity: 0, duration: 0.8 }, '-=0.2')
       .from('.srv-desc', { y: 20, opacity: 0, duration: 0.6 }, '-=0.3')
-      .from('.srv-step', { y: 25, opacity: 0, duration: 0.6, stagger: 0.12 }, '-=0.2');
-  }, [], sectionRef);
+      .from('.srv-step', { y: 25, opacity: 0, duration: 0.6, stagger: isMobile ? 0.06 : 0.12 }, '-=0.2');
+  }, [isMobile], sectionRef);
 
   return (
     <section id="services" ref={sectionRef} className="relative section-dark py-24 lg:py-36 my-2">
@@ -68,10 +82,11 @@ export default function Services() {
                 <motion.div
                   key={step.num}
                   className="srv-step flex items-start gap-4 group"
-                  whileHover={{ x: 6 }}
+                  whileHover={isMobile ? undefined : { x: 6 }}
+                  whileTap={isMobile ? { scale: 0.98 } : undefined}
                   transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 text-sm font-semibold text-white/60 shrink-0 group-hover:border-emerald-400/40 group-hover:text-emerald-400 transition-colors duration-300">
+                  <span className="flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-full border border-white/10 text-sm font-semibold text-white/60 shrink-0 group-hover:border-emerald-400/40 group-hover:text-emerald-400 transition-colors duration-300">
                     {step.num}
                   </span>
                   <div>
