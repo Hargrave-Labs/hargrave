@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
@@ -6,25 +6,9 @@ import { useGSAP } from '../hooks/useGSAP';
 import { Container } from '../components/ui/Container';
 import { GrainOverlay } from '../components/ui/GrainOverlay';
 import { ContainerScroll } from '../components/ui/container-scroll-animation';
-import mirariImg from '../assets/mirari.png';
-import mtEntImg from '../assets/mt_ent.png';
+import { getPortfolioProjects, type PortfolioProject } from '../lib/sanity';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const showcaseItems = [
-  {
-    title: 'Mirari Auto Detailing',
-    desc: 'Premium auto detailing website with sleek dark aesthetic and seamless booking experience.',
-    img: mirariImg,
-    alt: 'Mirari Auto Detailing Website',
-  },
-  {
-    title: 'MT Entertainment',
-    desc: 'Cinematic production company website with bold typography and elegant minimalism.',
-    img: mtEntImg,
-    alt: 'MT Entertainment Website',
-  },
-];
 
 const stats = [
   { value: '50+', label: 'Projects Delivered' },
@@ -35,6 +19,15 @@ const stats = [
 
 export default function Portfolio() {
   const headerRef = useRef<HTMLDivElement>(null);
+  const [projects, setProjects] = useState<PortfolioProject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPortfolioProjects()
+      .then(setProjects)
+      .catch((err) => console.error('Failed to load portfolio:', err))
+      .finally(() => setLoading(false));
+  }, []);
 
   useGSAP(() => {
     if (!headerRef.current) return;
@@ -68,25 +61,38 @@ export default function Portfolio() {
       <div className="relative section-dark py-8">
         <GrainOverlay />
         <div className="relative z-10">
-          {showcaseItems.map((item) => (
-            <ContainerScroll
-              key={item.title}
-              titleComponent={
-                <>
-                  <h3 className="text-3xl lg:text-4xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
-                    {item.title}
-                  </h3>
-                  <p className="text-lg text-white/40 mt-3 font-light">{item.desc}</p>
-                </>
-              }
+          {loading && (
+            <div className="flex justify-center py-32">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+            </div>
+          )}
+          {projects.map((project) => (
+            <a
+              key={project._id}
+              href={project.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
             >
-              <img
-                src={item.img}
-                alt={item.alt}
-                className="mx-auto rounded-2xl object-cover h-full w-full object-top"
-                draggable={false}
-              />
-            </ContainerScroll>
+              <ContainerScroll
+                titleComponent={
+                  <>
+                    <h3 className="text-3xl lg:text-4xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
+                      {project.title}
+                    </h3>
+                    <p className="text-lg text-white/40 mt-3 font-light">{project.description}</p>
+                  </>
+                }
+              >
+                <iframe
+                  src={project.websiteUrl}
+                  title={project.title}
+                  className="h-full w-full rounded-2xl pointer-events-none"
+                  loading="lazy"
+                  sandbox="allow-scripts allow-same-origin"
+                />
+              </ContainerScroll>
+            </a>
           ))}
         </div>
       </div>

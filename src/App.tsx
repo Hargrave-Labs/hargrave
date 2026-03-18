@@ -3,7 +3,7 @@ import { Footer } from './components/layout/Footer';
 import { CTABanner } from './components/sections/CTABanner';
 import Hero from './sections/Hero';
 import About from './sections/About';
-import Services from './sections/Services';
+import Services from './sections/ServicesCardPeel';
 import Portfolio from './sections/Portfolio';
 import Contact from './sections/Contact';
 

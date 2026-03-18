@@ -58,20 +58,29 @@ export default function About() {
           {/* Left — text */}
           <div>
             <h2 className="about-anim text-3xl sm:text-4xl lg:text-5xl font-semibold text-zinc-900 tracking-[-0.04em] leading-[1.05]">
-              Intelligent Design
+              Where AI Expertise
               <br />
-              System
+              Meets Development
+              <br />
+              Excellence
             </h2>
             <p className="about-anim mt-6 text-zinc-500 leading-relaxed font-light text-lg">
-              Hargrave Labs isn't just an agency; it's a creative partner that
-              understands your brand language. We maintain consistency across every
-              touchpoint while suggesting meaningful UX improvements.
+              Hargrave Labs brings the best of both worlds: innovative AI automation to optimise processes and expert web development to establish your online presence. With our specialised dual-focus approach, we provide your business with a single, trusted partner to elevate efficiency, engagement, and growth.
             </p>
-            <p className="about-anim mt-4 text-zinc-500 leading-relaxed font-light">
-              From typography scales to accessible colour palettes, our process ensures
-              every pixel serves a purpose. Stop fighting with generic templates and start
-              shipping world-class experiences.
-            </p>
+
+            {/* Values / mission */}
+            <div className="about-anim mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { label: 'Efficiency', desc: 'Streamlined processes that save time and resources' },
+                { label: 'Innovation', desc: 'Cutting-edge AI solutions tailored to your needs' },
+                { label: 'Partnership', desc: 'A single trusted partner for your digital growth' },
+              ].map((value) => (
+                <div key={value.label} className="p-4 rounded-xl bg-zinc-100 border border-zinc-200">
+                  <h4 className="text-sm font-semibold text-zinc-800">{value.label}</h4>
+                  <p className="text-xs text-zinc-500 mt-1 font-light leading-relaxed">{value.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right — floating dark visual card */}
