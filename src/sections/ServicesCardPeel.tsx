@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useRef, lazy, Suspense } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useGSAP } from '../hooks/useGSAP';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { Container } from '../components/ui/Container';
 import { GrainOverlay } from '../components/ui/GrainOverlay';
 
@@ -46,6 +47,15 @@ const aiContent = {
   },
 };
 
+/* ─── Lazy-loaded wireframes (mobile perf) ─────────────────────────── */
+
+const WebWireframeLazy = lazy(() =>
+  Promise.resolve({ default: WebWireframe })
+);
+const AiWireframeLazy = lazy(() =>
+  Promise.resolve({ default: AiWireframe })
+);
+
 /* ─── Sub-components ───────────────────────────────────────────────── */
 
 function StepCard({
@@ -56,15 +66,15 @@ function StepCard({
   isAI?: boolean;
 }) {
   return (
-    <div className="flex items-start gap-3 group">
-      <span className={`flex items-center justify-center w-9 h-9 rounded-full border text-xs font-semibold shrink-0 transition-all duration-300 ${
+    <div className="flex items-start gap-3 group min-h-[44px]">
+      <span className={`flex items-center justify-center w-9 h-9 min-w-[44px] min-h-[44px] rounded-full border text-xs font-semibold shrink-0 transition-all duration-300 ${
         isAI
-          ? 'border-emerald-500/20 text-emerald-400/70 group-hover:border-emerald-400/50 group-hover:text-emerald-400 group-hover:shadow-[0_0_12px_rgba(52,211,153,0.15)]'
-          : 'border-white/10 text-white/60 group-hover:border-emerald-400/40 group-hover:text-emerald-400'
+          ? 'border-emerald-500/20 text-emerald-400/70 group-hover:border-emerald-400/50 group-hover:text-emerald-400 group-hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] active:border-emerald-400/50 active:text-emerald-400'
+          : 'border-white/10 text-white/60 group-hover:border-emerald-400/40 group-hover:text-emerald-400 active:border-emerald-400/40 active:text-emerald-400'
       }`}>
         {step.num}
       </span>
-      <div>
+      <div className="pt-[2px]">
         <h3 className="text-white font-semibold text-xs">{step.title}</h3>
         <p className="text-white/40 text-xs font-light mt-0.5 leading-relaxed">{step.desc}</p>
       </div>
@@ -213,7 +223,9 @@ function CardContent({
       </div>
 
       <div className="hidden lg:block">
-        {wireframe}
+        <Suspense fallback={null}>
+          {wireframe}
+        </Suspense>
       </div>
     </div>
   );
@@ -226,19 +238,48 @@ export default function ServicesCardPeel() {
   const pinRef = useRef<HTMLDivElement>(null);
   const webCardRef = useRef<HTMLDivElement>(null);
   const aiCardRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // Subtle parallax on the section header
-  const labelY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  // Subtle parallax on the section header — reduced on mobile
+  const labelY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -10 : -30]);
 
   useGSAP(() => {
     if (!sectionRef.current || !pinRef.current || !webCardRef.current || !aiCardRef.current) return;
 
-    // Snap points: 0 = card 1 visible, 0.35 = card 2 visible (triggers when card 2 bottom just peeks), 1 = exit
+    // On mobile: skip card peel animation entirely — show stacked cards
+    if (isMobile) {
+      // Simple fade-in on scroll for mobile
+      gsap.from(webCardRef.current, {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: webCardRef.current,
+          start: 'top 80%',
+          fastScrollEnd: true,
+        },
+      });
+      gsap.from(aiCardRef.current, {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: aiCardRef.current,
+          start: 'top 80%',
+          fastScrollEnd: true,
+        },
+      });
+      return;
+    }
+
+    // Desktop: full card peel animation with snap
     const snapPoints = [0, 0.35, 1];
 
     const tl = gsap.timeline({
@@ -249,6 +290,7 @@ export default function ServicesCardPeel() {
         scrub: 0.8,
         pin: pinRef.current,
         pinSpacing: false,
+        fastScrollEnd: true,
         snap: {
           snapTo: snapPoints,
           duration: { min: 0.3, max: 0.6 },
@@ -258,9 +300,8 @@ export default function ServicesCardPeel() {
       },
     });
 
-    // 0–0.5: Hold card 1, then transition
-    // Card swap happens between 0.3–0.7 of the timeline
-    tl.to(webCardRef.current, { duration: 0.3 }); // hold
+    // 0–0.3: Hold card 1
+    tl.to(webCardRef.current, { duration: 0.3 });
 
     // Swap: web card goes behind
     tl.to(
@@ -289,7 +330,48 @@ export default function ServicesCardPeel() {
 
     // 0.7–1.0: Hold card 2, then release
     tl.to(aiCardRef.current, { duration: 0.3 });
-  }, [], sectionRef);
+  }, [isMobile], sectionRef);
+
+  // Mobile: static stacked layout; Desktop: pinned peel animation
+  if (isMobile) {
+    return (
+      <section id="services" ref={sectionRef} className="relative section-dark my-2">
+        <div ref={pinRef} className="relative">
+          <GrainOverlay />
+
+          {/* Reduced blur radius on mobile (60px vs 120px) for GPU perf */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-emerald-500/[0.03] rounded-full blur-[60px] pointer-events-none" />
+
+          <Container className="relative z-10 py-16">
+            {/* Section header */}
+            <motion.div className="text-center mb-8" style={{ y: labelY }}>
+              <p className="label-style mb-4">Our Services</p>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
+                Two disciplines.<br />One seamless partner.
+              </h2>
+            </motion.div>
+
+            {/* Static stacked cards on mobile */}
+            <div className="space-y-6">
+              <div
+                ref={webCardRef}
+                className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
+              >
+                <CardContent content={webContent} wireframe={<WebWireframeLazy />} />
+              </div>
+
+              <div
+                ref={aiCardRef}
+                className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 shadow-[0_0_80px_-20px_rgba(52,211,153,0.06)]"
+              >
+                <CardContent content={aiContent} wireframe={<AiWireframeLazy />} isAI />
+              </div>
+            </div>
+          </Container>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="services" ref={sectionRef} className="relative section-dark my-2" style={{ height: '200vh' }}>
@@ -328,7 +410,7 @@ export default function ServicesCardPeel() {
                 willChange: 'transform',
               }}
             >
-              <CardContent content={aiContent} wireframe={<AiWireframe />} isAI />
+              <CardContent content={aiContent} wireframe={<AiWireframeLazy />} isAI />
             </div>
 
             {/* Web card (starts in front) */}
@@ -340,7 +422,7 @@ export default function ServicesCardPeel() {
                 willChange: 'transform',
               }}
             >
-              <CardContent content={webContent} wireframe={<WebWireframe />} />
+              <CardContent content={webContent} wireframe={<WebWireframeLazy />} />
             </div>
           </div>
         </Container>
