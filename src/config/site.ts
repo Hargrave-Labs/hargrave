@@ -1,4 +1,7 @@
-import type { NavLink } from '../types';
+interface NavLink {
+  label: string;
+  href: string;
+}
 
 export const siteConfig = {
   name: 'Hargrave Labs',
