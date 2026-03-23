@@ -1,9 +1,7 @@
 import { useRef, lazy, Suspense } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { useGSAP } from '../hooks/useGSAP';
-import { useIsMobile } from '../hooks/useIsMobile';
 import { Container } from '../components/ui/Container';
 import { GrainOverlay } from '../components/ui/GrainOverlay';
 
@@ -235,194 +233,67 @@ function CardContent({
 
 export default function ServicesCardPeel() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
   const webCardRef = useRef<HTMLDivElement>(null);
   const aiCardRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
-
-  // Subtle parallax on the section header — reduced on mobile
-  const labelY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -10 : -30]);
-
+  // Simple fade-in on scroll for all screen sizes
   useGSAP(() => {
-    if (!sectionRef.current || !pinRef.current || !webCardRef.current || !aiCardRef.current) return;
+    if (!webCardRef.current || !aiCardRef.current) return;
 
-    // On mobile: skip card peel animation entirely — show stacked cards
-    if (isMobile) {
-      // Simple fade-in on scroll for mobile
-      gsap.from(webCardRef.current, {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: webCardRef.current,
-          start: 'top 80%',
-          fastScrollEnd: true,
-        },
-      });
-      gsap.from(aiCardRef.current, {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: aiCardRef.current,
-          start: 'top 80%',
-          fastScrollEnd: true,
-        },
-      });
-      return;
-    }
-
-    // Desktop: full card peel animation with snap
-    const snapPoints = [0, 0.35, 1];
-
-    const tl = gsap.timeline({
+    gsap.from(webCardRef.current, {
+      y: 20,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
       scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.8,
-        pin: pinRef.current,
-        pinSpacing: false,
+        trigger: webCardRef.current,
+        start: 'top 80%',
         fastScrollEnd: true,
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.3, max: 0.6 },
-          delay: 0,
-          ease: 'power2.inOut',
-        },
       },
     });
-
-    // 0–0.3: Hold card 1
-    tl.to(webCardRef.current, { duration: 0.3 });
-
-    // Swap: web card goes behind
-    tl.to(
-      webCardRef.current,
-      {
-        y: 40,
-        scale: 0.94,
-        zIndex: 0,
-        duration: 0.4,
-        ease: 'power2.inOut',
+    gsap.from(aiCardRef.current, {
+      y: 20,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: aiCardRef.current,
+        start: 'top 80%',
+        fastScrollEnd: true,
       },
-      0.3,
-    );
-    // Swap: AI card comes to front
-    tl.to(
-      aiCardRef.current,
-      {
-        y: 0,
-        scale: 1,
-        zIndex: 2,
-        duration: 0.4,
-        ease: 'power2.inOut',
-      },
-      0.3,
-    );
-
-    // 0.7–1.0: Hold card 2, then release
-    tl.to(aiCardRef.current, { duration: 0.3 });
-  }, [isMobile], sectionRef);
-
-  // Mobile: static stacked layout; Desktop: pinned peel animation
-  if (isMobile) {
-    return (
-      <section id="services" ref={sectionRef} className="relative section-dark my-2">
-        <div ref={pinRef} className="relative">
-          <GrainOverlay />
-
-          {/* Reduced blur radius on mobile (60px vs 120px) for GPU perf */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-emerald-500/[0.03] rounded-full blur-[60px] pointer-events-none" />
-
-          <Container className="relative z-10 py-16">
-            {/* Section header */}
-            <motion.div className="text-center mb-8" style={{ y: labelY }}>
-              <p className="label-style mb-4">Our Services</p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
-                Two disciplines.<br />One seamless partner.
-              </h2>
-            </motion.div>
-
-            {/* Static stacked cards on mobile */}
-            <div className="space-y-6">
-              <div
-                ref={webCardRef}
-                className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
-              >
-                <CardContent content={webContent} wireframe={<WebWireframeLazy />} />
-              </div>
-
-              <div
-                ref={aiCardRef}
-                className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 shadow-[0_0_80px_-20px_rgba(52,211,153,0.06)]"
-              >
-                <CardContent content={aiContent} wireframe={<AiWireframeLazy />} isAI />
-              </div>
-            </div>
-          </Container>
-        </div>
-      </section>
-    );
-  }
+    });
+  }, [], sectionRef);
 
   return (
-    <section id="services" ref={sectionRef} className="relative section-dark my-2" style={{ height: '200vh' }}>
-      <div
-        ref={pinRef}
-        className="relative h-screen flex flex-col justify-center"
-      >
+    <section id="services" ref={sectionRef} className="relative section-dark my-2">
+      <div className="relative">
         <GrainOverlay />
 
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-        }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[600px] h-[300px] lg:h-[600px] bg-emerald-500/[0.03] rounded-full blur-[60px] lg:blur-[120px] pointer-events-none" />
 
-        {/* Ambient glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/[0.03] rounded-full blur-[120px] pointer-events-none" />
-
-        <Container className="relative z-10 pt-24 pb-12">
+        <Container className="relative z-10 py-16">
           {/* Section header */}
-          <motion.div className="text-center mb-8" style={{ y: labelY }}>
+          <div className="text-center mb-8">
             <p className="label-style mb-4">Our Services</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
               Two disciplines.<br />One seamless partner.
             </h2>
-          </motion.div>
+          </div>
 
-          {/* Card stack */}
-          <div className="relative">
-            {/* AI card (starts behind — scaled down, shifted down) */}
-            <div
-              ref={aiCardRef}
-              className="absolute inset-0 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 lg:p-8 shadow-[0_0_80px_-20px_rgba(52,211,153,0.06)] overflow-hidden"
-              style={{
-                zIndex: 0,
-                transform: 'translateY(40px) scale(0.94)',
-                willChange: 'transform',
-              }}
-            >
-              <CardContent content={aiContent} wireframe={<AiWireframeLazy />} isAI />
-            </div>
-
-            {/* Web card (starts in front) */}
+          {/* Stacked cards */}
+          <div className="space-y-6">
             <div
               ref={webCardRef}
-              className="relative rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 lg:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
-              style={{
-                zIndex: 2,
-                willChange: 'transform',
-              }}
+              className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 lg:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
             >
               <CardContent content={webContent} wireframe={<WebWireframeLazy />} />
+            </div>
+
+            <div
+              ref={aiCardRef}
+              className="rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/[0.06] p-6 lg:p-8 shadow-[0_0_80px_-20px_rgba(52,211,153,0.06)]"
+            >
+              <CardContent content={aiContent} wireframe={<AiWireframeLazy />} isAI />
             </div>
           </div>
         </Container>
