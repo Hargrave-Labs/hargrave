@@ -24,7 +24,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4" style={{ WebkitTransform: 'translateZ(0)', isolation: 'isolate' }}>
+    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4 bg-[#0a0a0a]" style={{ WebkitTransform: 'translateZ(0)', colorScheme: 'dark' }}>
       {/* Gradient background */}
       <div className="absolute inset-0" style={{ WebkitTransform: 'translateZ(0)' }}>
         <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#071a12] to-[#0a0a0a]" style={{ WebkitBackfaceVisibility: 'hidden' }} />

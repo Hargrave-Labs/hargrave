@@ -37,7 +37,7 @@ export function CTABanner({
   };
 
   return (
-    <section ref={ref} className="relative overflow-hidden rounded-[2.5rem] mx-4 my-2 py-24 lg:py-32">
+    <section ref={ref} className="relative overflow-hidden rounded-[2.5rem] mx-4 my-2 py-24 lg:py-32 bg-black" style={{ colorScheme: 'dark' }}>
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black">
         <GrainOverlay />
       </div>
