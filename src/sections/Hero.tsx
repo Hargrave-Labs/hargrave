@@ -24,10 +24,10 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4">
+    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4" style={{ WebkitTransform: 'translateZ(0)', isolation: 'isolate' }}>
       {/* Gradient background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#071a12] to-[#0a0a0a]" />
+      <div className="absolute inset-0" style={{ WebkitTransform: 'translateZ(0)' }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#071a12] to-[#0a0a0a]" style={{ WebkitBackfaceVisibility: 'hidden' }} />
         <div
           className="absolute bottom-0 left-0 right-0 h-[90%]"
           style={{
@@ -45,8 +45,8 @@ export default function Hero() {
 
       <GrainOverlay />
 
-      <Container className="relative z-10 pt-32 lg:pt-40 pb-32 lg:pb-40">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-center">
+      <Container className="relative z-10 pt-32 md:pt-36 lg:pt-40 pb-32 md:pb-36 lg:pb-40">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12 md:gap-16 lg:gap-20 items-center">
           <div>
             {/* Badge */}
             <div className="hero-badge inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/10 mb-8">
@@ -57,7 +57,7 @@ export default function Hero() {
             </div>
 
             {/* Heading — each word wrapped for stagger animation */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white tracking-[-0.04em] leading-[1.0]">
+            <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold text-white tracking-[-0.04em] leading-[1.0]">
               {'Empowering Your'.split(' ').map((word, i) => (
                 <span key={i} className="hero-title-word inline-block mr-[0.25em]">{word}</span>
               ))}
@@ -71,7 +71,7 @@ export default function Hero() {
             </h1>
 
             {/* Subheadline */}
-            <p className="hero-desc mt-6 text-xl lg:text-2xl text-white/70 leading-relaxed font-light max-w-2xl">
+            <p className="hero-desc mt-6 text-xl md:text-2xl lg:text-2xl text-white/70 leading-relaxed font-light max-w-2xl">
               At Hargrave Labs, we combine cutting-edge AI automation with expert web development to help your business scale efficiently and thrive.
             </p>
 
@@ -95,7 +95,7 @@ export default function Hero() {
           </div>
 
           {/* Stat cards */}
-          <div className="flex flex-col gap-4 lg:min-w-[280px]">
+          <div className="flex flex-row md:flex-col gap-4 md:min-w-[240px] lg:min-w-[280px]">
             {[
               { value: '10x', desc: 'Faster design iterations with AI-assisted automation.', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' },
               { value: '100+', desc: 'Production-ready projects delivered across industries.', icon: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
