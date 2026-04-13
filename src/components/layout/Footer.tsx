@@ -1,10 +1,6 @@
 import { siteConfig, navLinks } from '../../config/site';
 import { GrainOverlay } from '../ui/GrainOverlay';
-
-function scrollTo(href: string) {
-  const el = document.querySelector(href);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
+import { scrollToSection } from '../../lib/utils';
 
 export function Footer() {
   return (
@@ -16,7 +12,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4 tracking-[-0.03em]">
               {siteConfig.name}
             </h3>
-            <p className="text-white/40 text-sm leading-relaxed max-w-xs font-light">
+            <p className="text-white/55 text-sm leading-relaxed max-w-xs font-light">
               {siteConfig.description}
             </p>
           </div>
@@ -28,8 +24,8 @@ export function Footer() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
-                    className="text-sm text-white/40 hover:text-white transition-colors duration-300 font-light"
+                    onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
+                    className="text-sm text-white/55 hover:text-white transition-[color,transform] duration-200 ease-[var(--ease-out)] hover:translate-x-0.5 font-light"
                   >
                     {link.label}
                   </a>
@@ -40,7 +36,7 @@ export function Footer() {
 
           <div>
             <h4 className="label-style mb-4">Contact</h4>
-            <ul className="space-y-3 text-sm text-white/40 font-light">
+            <ul className="space-y-3 text-sm text-white/55 font-light">
               <li>{siteConfig.email}</li>
               <li>{siteConfig.locations.perth}</li>
               <li>{siteConfig.locations.melbourne}</li>
@@ -49,10 +45,10 @@ export function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-white/30">
+          <p className="text-xs text-white/50">
             &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
-          <p className="text-xs text-white/30">
+          <p className="text-xs text-white/50">
             Crafted with precision in Australia.
           </p>
         </div>

@@ -102,7 +102,7 @@ export default function About() {
                   {/* Progress bars */}
                   <div className="rounded-xl bg-white/5 border border-white/10 p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs text-white/40 uppercase tracking-wider">System Analysis</span>
+                      <span className="text-xs text-white/55 uppercase tracking-wider">System Analysis</span>
                       <div className="flex gap-1">
                         <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                         <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
@@ -153,11 +153,9 @@ export default function About() {
         {/* Capability grid */}
         <div className="cap-grid grid grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6 mt-20 lg:mt-28">
           {capabilities.map((cap) => (
-            <motion.div
+            <div
               key={cap.label}
-              className="cap-item flex items-center gap-3 py-3"
-              whileHover={{ x: 4 }}
-              transition={{ duration: 0.2 }}
+              className="cap-item flex items-center gap-3 py-3 transition-transform duration-200 ease-[var(--ease-out)] hover:translate-x-1"
             >
               <span className="w-10 h-10 rounded-xl bg-zinc-200/80 flex items-center justify-center shrink-0">
                 <svg className="w-5 h-5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -165,7 +163,7 @@ export default function About() {
                 </svg>
               </span>
               <span className="text-sm font-medium text-zinc-700">{cap.label}</span>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Container>

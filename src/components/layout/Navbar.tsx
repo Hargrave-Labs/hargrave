@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import gsap from 'gsap';
 import { navLinks, siteConfig } from '../../config/site';
-import { cn } from '../../lib/utils';
+import { cn, scrollToSection } from '../../lib/utils';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -82,8 +82,7 @@ export function Navbar() {
 
   const scrollTo = (href: string) => {
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    scrollToSection(href);
   };
 
   return (
@@ -92,7 +91,8 @@ export function Navbar() {
         <nav
           ref={navRef}
           className={cn(
-            'w-full max-w-[1600px] rounded-full transition-all duration-500 p-[1.5px] backdrop-blur-xl -translate-y-[120px] opacity-0',
+            'w-full max-w-[1600px] rounded-full p-[1.5px] backdrop-blur-xl -translate-y-[120px] opacity-0',
+            'transition-[background-color,border-color,box-shadow] duration-500 ease-[var(--ease-out)]',
             onDark
               ? 'bg-white/[0.12] border border-white/[0.18] shadow-lg shadow-black/20'
               : 'bg-white/70 border border-zinc-200/80 shadow-lg shadow-black/[0.08]'
@@ -104,7 +104,7 @@ export function Navbar() {
                 href="#home"
                 onClick={(e) => { e.preventDefault(); scrollTo('#home'); }}
                 className={cn(
-                  'text-lg font-semibold tracking-[-0.03em] transition-colors duration-500',
+                  'text-lg font-semibold tracking-[-0.03em] transition-colors duration-300 ease-[var(--ease-out)]',
                   onDark ? 'text-white' : 'text-zinc-900'
                 )}
               >
@@ -119,7 +119,8 @@ export function Navbar() {
                     href={link.href}
                     onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
                     className={cn(
-                      'text-sm tracking-wide transition-all duration-500 px-4 py-2 rounded-full',
+                      'text-sm tracking-wide px-4 py-2 rounded-full',
+                      'transition-[color,background-color] duration-200 ease-[var(--ease-out)]',
                       onDark
                         ? activeSection === link.href
                           ? 'text-white bg-white/10'
@@ -136,7 +137,8 @@ export function Navbar() {
                   href="#contact"
                   onClick={(e) => { e.preventDefault(); scrollTo('#contact'); }}
                   className={cn(
-                    'ml-3 px-5 py-2 text-sm font-medium rounded-full transition-all duration-500',
+                    'ml-3 px-5 py-2 text-sm font-medium rounded-full',
+                    'transition-[color,background-color] duration-200 ease-[var(--ease-out)]',
                     onDark
                       ? 'bg-white text-zinc-900 hover:bg-zinc-100'
                       : 'bg-zinc-900 text-white hover:bg-zinc-800'
@@ -153,12 +155,12 @@ export function Navbar() {
                 aria-label="Toggle menu"
               >
                 <span className={cn(
-                  'block w-6 h-px transition-all duration-500',
+                  'block w-6 h-px transition-[transform,background-color] duration-300 ease-[var(--ease-out)]',
                   onDark ? 'bg-white' : 'bg-zinc-900',
                   mobileOpen && 'rotate-45 translate-y-[3.5px]'
                 )} />
                 <span className={cn(
-                  'block w-6 h-px transition-all duration-500',
+                  'block w-6 h-px transition-[transform,background-color] duration-300 ease-[var(--ease-out)]',
                   onDark ? 'bg-white' : 'bg-zinc-900',
                   mobileOpen && '-rotate-45 -translate-y-[3.5px]'
                 )} />

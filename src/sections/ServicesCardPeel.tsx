@@ -65,7 +65,7 @@ function StepCard({
 }) {
   return (
     <div className="flex items-start gap-3 group min-h-[44px]">
-      <span className={`flex items-center justify-center w-9 h-9 min-w-[44px] min-h-[44px] rounded-full border text-xs font-semibold shrink-0 transition-all duration-300 ${
+      <span className={`flex items-center justify-center w-9 h-9 min-w-[44px] min-h-[44px] rounded-full border text-xs font-semibold shrink-0 transition-[border-color,color,box-shadow] duration-200 ease-[var(--ease-out)] ${
         isAI
           ? 'border-emerald-500/20 text-emerald-400/70 group-hover:border-emerald-400/50 group-hover:text-emerald-400 group-hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] active:border-emerald-400/50 active:text-emerald-400'
           : 'border-white/10 text-white/60 group-hover:border-emerald-400/40 group-hover:text-emerald-400 active:border-emerald-400/40 active:text-emerald-400'
@@ -74,7 +74,7 @@ function StepCard({
       </span>
       <div className="pt-[2px]">
         <h3 className="text-white font-semibold text-xs">{step.title}</h3>
-        <p className="text-white/40 text-xs font-light mt-0.5 leading-relaxed">{step.desc}</p>
+        <p className="text-white/55 text-xs font-light mt-0.5 leading-relaxed">{step.desc}</p>
       </div>
     </div>
   );
@@ -127,7 +127,7 @@ function AiWireframe() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-white/40 uppercase tracking-wider">Pipeline Active</span>
+            <span className="text-xs text-white/55 uppercase tracking-wider">Pipeline Active</span>
           </div>
           <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Live</span>
         </div>
@@ -142,14 +142,14 @@ function AiWireframe() {
                 <span className="text-xs text-white/60 font-medium">{node.label}</span>
                 <span className={`text-[10px] font-medium ${
                   node.status === 'complete' ? 'text-emerald-400' :
-                  node.status === 'active' ? 'text-amber-400' : 'text-white/20'
+                  node.status === 'active' ? 'text-amber-400' : 'text-white/40'
                 }`}>
                   {node.status === 'complete' ? 'Complete' : node.status === 'active' ? 'Running...' : 'Queued'}
                 </span>
               </div>
               <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-1000 ${
+                  className={`h-full rounded-full transition-[width] duration-1000 ease-[var(--ease-in-out)] ${
                     node.status === 'complete' ? 'bg-emerald-400' :
                     node.status === 'active' ? 'bg-gradient-to-r from-emerald-400 to-amber-400' : 'bg-white/5'
                   }`}
@@ -195,7 +195,7 @@ function CardContent({
         <h2 className="text-2xl sm:text-3xl lg:text-[2rem] font-semibold text-white tracking-[-0.04em] leading-[1.15]">
           {content.title}
         </h2>
-        <p className="mt-4 text-white/50 leading-relaxed font-light text-sm max-w-lg">
+        <p className="mt-4 text-white/60 leading-relaxed font-light text-sm max-w-lg">
           {content.desc}
         </p>
 
@@ -214,7 +214,7 @@ function CardContent({
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span className="text-emerald-400 text-xs font-semibold tracking-wide">{content.callout.label}</span>
           </div>
-          <p className="text-white/40 text-xs font-light leading-relaxed">
+          <p className="text-white/55 text-xs font-light leading-relaxed">
             {content.callout.text}
           </p>
         </div>

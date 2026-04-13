@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion } from 'framer-motion';
 import { useGSAP } from '../../hooks/useGSAP';
 import { Container } from '../ui/Container';
 import { GrainOverlay } from '../ui/GrainOverlay';
+import { scrollToSection } from '../../lib/utils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,14 +31,9 @@ export function CTABanner({
     });
   }, [], ref);
 
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <section ref={ref} className="relative overflow-hidden rounded-[2.5rem] mx-4 my-2 py-24 lg:py-32 bg-black" style={{ colorScheme: 'dark' }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black">
+    <section ref={ref} className="relative overflow-hidden rounded-[2.5rem] mx-4 my-2 py-24 lg:py-32 bg-[#050706]" style={{ colorScheme: 'dark' }}>
+      <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-[#050706]">
         <GrainOverlay />
       </div>
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
@@ -49,31 +44,27 @@ export function CTABanner({
         <h2 className="cta-anim text-3xl sm:text-4xl lg:text-5xl font-semibold text-white text-balance tracking-[-0.05em] leading-[1.05]">
           {title}
         </h2>
-        <p className="cta-anim mt-5 text-white/40 text-lg max-w-xl mx-auto font-light">
+        <p className="cta-anim mt-5 text-white/55 text-lg max-w-xl mx-auto font-light">
           {description}
         </p>
         <div className="cta-anim mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <motion.a
+          <a
             href="#contact"
-            onClick={(e) => { e.preventDefault(); scrollTo('#contact'); }}
-            className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-white text-black text-sm font-medium"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
+            onClick={(e: React.MouseEvent) => { e.preventDefault(); scrollToSection('#contact'); }}
+            className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-white text-black text-sm font-medium transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-zinc-100 active:!scale-[0.97]"
           >
             Start a Conversation
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
-          </motion.a>
-          <motion.a
+          </a>
+          <a
             href="#services"
-            onClick={(e) => { e.preventDefault(); scrollTo('#services'); }}
-            className="inline-flex items-center px-7 py-3.5 rounded-full border border-white/20 text-white text-sm font-medium backdrop-blur-sm"
-            whileHover={{ scale: 1.04, backgroundColor: 'rgba(255,255,255,0.05)' }}
-            whileTap={{ scale: 0.97 }}
+            onClick={(e: React.MouseEvent) => { e.preventDefault(); scrollToSection('#services'); }}
+            className="inline-flex items-center px-7 py-3.5 rounded-full border border-white/20 text-white text-sm font-medium backdrop-blur-sm transition-[transform,background-color,border-color] duration-150 ease-[var(--ease-out)] hover:bg-white/[0.05] hover:border-white/30 active:!scale-[0.97]"
           >
             Explore Services
-          </motion.a>
+          </a>
         </div>
       </Container>
     </section>

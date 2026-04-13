@@ -1,5 +1,4 @@
-import { cn } from '../../lib/utils';
-import { motion } from 'framer-motion';
+import { cn, scrollToSection } from '../../lib/utils';
 import type { ReactNode, ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,14 +28,14 @@ function ArrowIcon({ variant: v }: { variant: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center justify-center rounded-full transition-colors duration-300 shrink-0',
+        'inline-flex items-center justify-center rounded-full shrink-0 transition-[background-color] duration-200 ease-[var(--ease-out)]',
         v === 'primary'
-          ? 'w-10 h-10 bg-zinc-900 hover:bg-zinc-700'
-          : 'w-10 h-10 bg-white/10 hover:bg-white/20',
+          ? 'w-10 h-10 bg-zinc-900 group-hover:bg-zinc-700'
+          : 'w-10 h-10 bg-white/10 group-hover:bg-white/20',
       )}
     >
       <svg
-        className={cn('w-4 h-4', v === 'primary' ? 'text-white' : 'text-white')}
+        className="w-4 h-4 text-white"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -48,16 +47,6 @@ function ArrowIcon({ variant: v }: { variant: string }) {
   );
 }
 
-function scrollTo(href: string) {
-  if (href.startsWith('#')) {
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-  }
-}
-
 export function Button({
   variant = 'primary',
   size = 'md',
@@ -67,7 +56,9 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 tracking-wide',
+    'group inline-flex items-center justify-center font-medium rounded-full tracking-wide',
+    'transition-[transform,background-color,border-color] duration-150 ease-[var(--ease-out)]',
+    'active:!scale-[0.97]',
     variants[variant],
     sizes[size],
     className
@@ -75,38 +66,29 @@ export function Button({
 
   if (href) {
     return (
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      <a
+        href={href}
+        onClick={(e) => {
+          if (href.startsWith('#')) {
+            e.preventDefault();
+            scrollToSection(href);
+          }
+        }}
+        className={classes}
       >
-        <a
-          href={href}
-          onClick={(e) => {
-            if (href.startsWith('#')) {
-              e.preventDefault();
-              scrollTo(href);
-            }
-          }}
-          className={classes}
-        >
-          <span>{children}</span>
-          <ArrowIcon variant={variant} />
-        </a>
-      </motion.div>
+        <span>{children}</span>
+        <ArrowIcon variant={variant} />
+      </a>
     );
   }
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    <button
       className={classes}
-      {...(props as object)}
+      {...props}
     >
       <span>{children}</span>
       <ArrowIcon variant={variant} />
-    </motion.button>
+    </button>
   );
 }

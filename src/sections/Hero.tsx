@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
-import { motion } from 'framer-motion';
 import { useGSAP } from '../hooks/useGSAP';
 import { Container } from '../components/ui/Container';
 import { GrainOverlay } from '../components/ui/GrainOverlay';
+import { scrollToSection } from '../lib/utils';
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,16 +18,11 @@ export default function Hero() {
       .from('.hero-stat', { y: 40, opacity: 0, duration: 0.7, stagger: 0.15 }, '-=0.4');
   }, [], ref);
 
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4 bg-[#0a0a0a]" style={{ WebkitTransform: 'translateZ(0)', colorScheme: 'dark' }}>
+    <section id="home" ref={ref} className="relative min-h-[calc(100vh-2rem)] flex items-center overflow-hidden rounded-[2.5rem] mx-4 mt-4 mb-4 bg-[#0a0b0a]" style={{ WebkitTransform: 'translateZ(0)', colorScheme: 'dark' }}>
       {/* Gradient background */}
       <div className="absolute inset-0" style={{ WebkitTransform: 'translateZ(0)' }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#071a12] to-[#0a0a0a]" style={{ WebkitBackfaceVisibility: 'hidden' }} />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0b0a] via-[#071a12] to-[#0a0b0a]" style={{ WebkitBackfaceVisibility: 'hidden' }} />
         <div
           className="absolute bottom-0 left-0 right-0 h-[90%]"
           style={{
@@ -40,7 +35,7 @@ export default function Hero() {
             `,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-transparent opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0b0a] via-transparent to-transparent opacity-40" />
       </div>
 
       <GrainOverlay />
@@ -52,7 +47,7 @@ export default function Hero() {
             <div className="hero-badge inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/10 mb-8">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/80">
-                Now Available
+                Available for Projects
               </span>
             </div>
 
@@ -77,12 +72,10 @@ export default function Hero() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 mt-10">
-              <motion.a
+              <a
                 href="#services"
-                onClick={(e) => { e.preventDefault(); scrollTo('#services'); }}
-                className="hero-cta inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-white text-black text-sm font-medium"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
+                onClick={(e) => { e.preventDefault(); scrollToSection('#services'); }}
+                className="hero-cta inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-white text-black text-sm font-medium transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-zinc-100 active:!scale-[0.97]"
               >
                 Learn More About Our Services
                 <span className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
@@ -90,7 +83,7 @@ export default function Hero() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </span>
-              </motion.a>
+              </a>
             </div>
           </div>
 
@@ -98,22 +91,20 @@ export default function Hero() {
           <div className="flex flex-row md:flex-col gap-4 md:min-w-[240px] lg:min-w-[280px]">
             {[
               { value: '10x', desc: 'Faster design iterations with AI-assisted automation.', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' },
-              { value: '100+', desc: 'Production-ready projects delivered across industries.', icon: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+              { value: '50+', desc: 'Production-ready projects delivered across industries.', icon: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
             ].map((stat, i) => (
-              <motion.div
+              <div
                 key={i}
-                className="hero-stat rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 p-6"
-                whileHover={{ y: -4, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                transition={{ duration: 0.3 }}
+                className="hero-stat rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 p-6 transition-[transform,background-color] duration-200 ease-[var(--ease-out)] hover:-translate-y-1 hover:bg-white/[0.1]"
               >
                 <div className="flex items-start justify-between">
                   <span className="text-4xl font-semibold text-white tracking-tight">{stat.value}</span>
-                  <svg className="w-5 h-5 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-5 h-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d={stat.icon} />
                   </svg>
                 </div>
-                <p className="text-sm text-white/40 mt-2 font-light leading-snug">{stat.desc}</p>
-              </motion.div>
+                <p className="text-sm text-white/55 mt-2 font-light leading-snug">{stat.desc}</p>
+              </div>
             ))}
           </div>
         </div>

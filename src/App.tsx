@@ -9,7 +9,7 @@ import Contact from './sections/Contact';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-surface">
       <Navbar />
       <main className="flex-1">
         <Hero />

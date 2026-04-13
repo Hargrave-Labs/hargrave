@@ -19,7 +19,7 @@ export function Input({ label, className, ...props }: InputProps) {
         className={cn(
           'w-full bg-white/5 backdrop-blur-[12px] border border-white/10 rounded-xl px-4 py-3 text-white text-sm',
           'placeholder:text-brand-500 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20',
-          'transition-all duration-300',
+          'transition-[border-color,box-shadow] duration-200 ease-[var(--ease-out)]',
           className
         )}
         {...props}
@@ -38,7 +38,7 @@ export function Textarea({ label, className, ...props }: TextareaProps) {
         className={cn(
           'w-full bg-white/5 backdrop-blur-[12px] border border-white/10 rounded-xl px-4 py-3 text-white text-sm',
           'placeholder:text-brand-500 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20',
-          'transition-all duration-300 resize-none',
+          'transition-[border-color,box-shadow] duration-200 ease-[var(--ease-out)] resize-none',
           className
         )}
         rows={6}

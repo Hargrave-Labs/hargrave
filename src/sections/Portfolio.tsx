@@ -25,7 +25,7 @@ export default function Portfolio() {
   useEffect(() => {
     getPortfolioProjects()
       .then(setProjects)
-      .catch((err) => console.error('Failed to load portfolio:', err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -66,6 +66,11 @@ export default function Portfolio() {
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
             </div>
           )}
+          {!loading && projects.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-32 text-center">
+              <p className="text-white/50 text-lg font-light">New work coming soon.</p>
+            </div>
+          )}
           {projects.map((project) => (
             <a
               key={project._id}
@@ -80,7 +85,7 @@ export default function Portfolio() {
                     <h3 className="text-3xl lg:text-4xl font-semibold text-white tracking-[-0.04em] leading-[1.05]">
                       {project.title}
                     </h3>
-                    <p className="text-lg text-white/40 mt-3 font-light">{project.description}</p>
+                    <p className="text-lg text-white/55 mt-3 font-light">{project.description}</p>
                   </>
                 }
               >
