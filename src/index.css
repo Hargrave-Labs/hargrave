@@ -53,6 +53,25 @@
   }
 }
 
+/* Drifting green blobs for the no-WebGL aurora fallback (see AuroraShader). */
+@keyframes aurora-drift-a {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-7%, 5%, 0) scale(1.22);
+  }
+}
+
+@keyframes aurora-drift-b {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.16);
+  }
+  100% {
+    transform: translate3d(6%, -6%, 0) scale(1.02);
+  }
+}
+
 @layer base {
   * {
     -webkit-font-smoothing: antialiased;

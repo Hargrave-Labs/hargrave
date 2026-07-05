@@ -39,3 +39,4 @@ dist-ssr
 .agents
 .claude
 skills
+.gstack/
