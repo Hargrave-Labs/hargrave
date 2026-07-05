@@ -34,6 +34,7 @@ uniform vec2 u_mouse;
 uniform float u_dpr;
 uniform float u_gate;
 uniform int u_octaves;
+uniform float u_mobile;
 
 out vec4 outColor;
 
@@ -100,8 +101,9 @@ void main() {
   vec2 mouseOffset = (u_mouse - 0.5) * 0.32;
   pr += mouseOffset;
 
-  // Liquid drift so the aurora flows rather than breathing in place.
-  vec2 drift = vec2(t * 0.07, -t * 0.052);
+  // Liquid drift so the aurora flows rather than breathing in place. Mobile
+  // drifts a bit faster so the flow is clearly visible on a small screen.
+  vec2 drift = vec2(t * 0.07, -t * 0.052) * mix(1.0, 1.3, u_mobile);
   vec2 flow = pr + drift;
 
   // --- Cursor stir ----------------------------------------------------
@@ -141,8 +143,11 @@ void main() {
   // TOP of the frame (WebGL fragcoord convention), so "top 70%" is
   // uv.y > 0.3. Both terms are 0 for the entire protected box (x <= 0.55,
   // y >= 0.3), guaranteeing a dark floor there regardless of field value.
-  float openRight = smoothstep(0.55, 0.74, uv.x);
-  float openBottom = 1.0 - smoothstep(0.06, 0.30, uv.y);
+  // On mobile the green reaches a little further left and a little higher up
+  // the bottom, so a pool of flowing aurora sits below the CTAs and along the
+  // right — but the top-left headline/subhead zone stays protected for contrast.
+  float openRight = smoothstep(mix(0.55, 0.50, u_mobile), 0.74, uv.x);
+  float openBottom = 1.0 - smoothstep(0.06, mix(0.30, 0.36, u_mobile), uv.y);
   float openGate = max(openRight, openBottom);
   float shade = mix(0.02, 1.0, openGate);
   // u_gate = 0 disables the protection entirely for a full-bleed glow: the
@@ -283,7 +288,7 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
     const isMobile = window.matchMedia('(max-width: 1023px)').matches;
     const maxDpr = isMobile ? 1 : 1.5;
     const octaves = isMobile ? 3 : 5;
-    const minFrameMs = isMobile ? 33 : 0;
+    const minFrameMs = isMobile ? 25 : 0; // ~40fps on mobile for smoother flow
 
     const gl = canvas.getContext('webgl2', {
       alpha: false,
@@ -322,6 +327,7 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
     const uDprLoc = gl.getUniformLocation(program, 'u_dpr');
     const uGateLoc = gl.getUniformLocation(program, 'u_gate');
     const uOctavesLoc = gl.getUniformLocation(program, 'u_octaves');
+    const uMobileLoc = gl.getUniformLocation(program, 'u_mobile');
 
     let dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     let needsResize = true;
@@ -354,6 +360,7 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
       gl!.uniform1f(uDprLoc, dpr);
       gl!.uniform1f(uGateLoc, gatedRef.current ? 1.0 : 0.0);
       gl!.uniform1i(uOctavesLoc, octaves);
+      gl!.uniform1f(uMobileLoc, isMobile ? 1.0 : 0.0);
       gl!.bindVertexArray(vao);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
     }
