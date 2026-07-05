@@ -33,6 +33,7 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_dpr;
 uniform float u_gate;
+uniform int u_octaves;
 
 out vec4 outColor;
 
@@ -56,7 +57,11 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float value = 0.0;
   float amp = 0.5;
+  // Fixed loop bound (GLSL wants a constant) with an early-out at the
+  // device-chosen octave count: mobile runs fewer octaves for less per-pixel
+  // work, desktop runs the full 5 for fine detail.
   for (int i = 0; i < 5; i++) {
+    if (i >= u_octaves) break;
     value += amp * noise(p);
     p *= 2.02;
     amp *= 0.5;
@@ -272,6 +277,13 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
     if (!canvas) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Mobile GPUs are a fraction of a desktop's and phones run at DPR 2-3, so the
+    // same shader that's trivial on a laptop can cook a phone. On mobile we render
+    // at DPR 1, draw at ~30fps, and use fewer noise octaves — a ~6x cut in GPU work.
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const maxDpr = isMobile ? 1 : 1.5;
+    const octaves = isMobile ? 3 : 5;
+    const minFrameMs = isMobile ? 33 : 0;
 
     const gl = canvas.getContext('webgl2', {
       alpha: false,
@@ -309,14 +321,15 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
     const uMouseLoc = gl.getUniformLocation(program, 'u_mouse');
     const uDprLoc = gl.getUniformLocation(program, 'u_dpr');
     const uGateLoc = gl.getUniformLocation(program, 'u_gate');
+    const uOctavesLoc = gl.getUniformLocation(program, 'u_octaves');
 
-    let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     let needsResize = true;
 
     function resize() {
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       const width = Math.max(1, Math.round(rect.width * dpr));
       const height = Math.max(1, Math.round(rect.height * dpr));
       if (canvas.width !== width || canvas.height !== height) {
@@ -340,6 +353,7 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
       gl!.uniform2f(uMouseLoc, mouseCurrent[0], mouseCurrent[1]);
       gl!.uniform1f(uDprLoc, dpr);
       gl!.uniform1f(uGateLoc, gatedRef.current ? 1.0 : 0.0);
+      gl!.uniform1i(uOctavesLoc, octaves);
       gl!.bindVertexArray(vao);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
     }
@@ -352,14 +366,19 @@ export function AuroraShader({ className, gated = true }: AuroraShaderProps) {
     const shouldRun = () => !disposed && !reducedMotion && isIntersecting && isDocVisible;
 
     const startTimeMs = performance.now();
+    let lastFrameMs = -Infinity;
 
     function loop(nowMs: number) {
       rafId = 0;
       if (!shouldRun()) return;
+      // Keep the rAF chain alive at display rate, but only actually draw once
+      // minFrameMs has elapsed (0 on desktop = every frame, ~33ms on mobile = 30fps).
+      rafId = requestAnimationFrame(loop);
+      if (nowMs - lastFrameMs < minFrameMs) return;
+      lastFrameMs = nowMs;
       mouseCurrent[0] += (mouseTarget[0] - mouseCurrent[0]) * 0.085;
       mouseCurrent[1] += (mouseTarget[1] - mouseCurrent[1]) * 0.085;
       drawFrame((nowMs - startTimeMs) / 1000);
-      rafId = requestAnimationFrame(loop);
     }
 
     function ensureLoop() {
