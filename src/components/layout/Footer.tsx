@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { siteConfig, navLinks } from '../../config/site';
 import { GrainOverlay } from '../ui/GrainOverlay';
 import { scrollToSection } from '../../lib/utils';
@@ -31,6 +32,14 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/portal/login"
+                  className="text-sm text-emerald-400/80 hover:text-emerald-300 transition-[color,transform] duration-200 ease-[var(--ease-out)] hover:translate-x-0.5 font-light"
+                >
+                  Client Login
+                </Link>
+              </li>
             </ul>
           </div>
 
