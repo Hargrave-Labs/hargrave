@@ -1,38 +1,47 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const ran = useRef(false);
 
   useEffect(() => {
-    let active = true;
+    // The PKCE code is single-use. React StrictMode invokes effects twice in dev,
+    // which would exchange the code a second time and fail — so run exactly once.
+    if (ran.current) return;
+    ran.current = true;
+
     (async () => {
       const params = new URLSearchParams(window.location.search);
       const errDesc = params.get('error_description');
       if (errDesc) {
-        if (active) setError(errDesc);
+        setError(errDesc);
         return;
       }
 
       const code = params.get('code');
       if (!code) {
-        if (active) setError('Missing sign-in code. Please request a new link.');
+        setError('Missing sign-in code. Please request a new link.');
         return;
       }
 
       const { error: exErr } = await supabase.auth.exchangeCodeForSession(code);
-      if (!active) return;
-      if (exErr) {
-        setError('Your sign-in link is invalid or has expired.');
+      if (!exErr) {
+        navigate('/portal', { replace: true });
         return;
       }
-      navigate('/portal', { replace: true });
+
+      // The exchange failed — but a prior attempt may already have established the
+      // session. If one exists, proceed; otherwise surface the error.
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        navigate('/portal', { replace: true });
+      } else {
+        setError('Your sign-in link is invalid or has expired. Please request a new one.');
+      }
     })();
-    return () => {
-      active = false;
-    };
   }, [navigate]);
 
   return (
