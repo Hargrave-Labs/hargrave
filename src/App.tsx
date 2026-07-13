@@ -1,44 +1,36 @@
-import { useState } from 'react';
-import { Navbar } from './components/layout/Navbar';
-import { Footer } from './components/layout/Footer';
-import { CTABanner } from './components/sections/CTABanner';
-import { IntroOverlay } from './components/IntroOverlay';
-import Hero from './sections/Hero';
-import About from './sections/About';
-import Services from './sections/ServicesCardPeel';
-import Portfolio from './sections/Portfolio';
-import Contact from './sections/Contact';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import Home from './pages/Home';
+
+const PortalApp = lazy(() => import('./portal/PortalApp'));
+
+const portalFallback = (
+  <div
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#050706',
+      color: 'rgba(255,255,255,0.6)',
+      fontFamily: 'Inter, system-ui, sans-serif',
+    }}
+  >
+    Loading…
+  </div>
+);
 
 function App() {
-  const [introDone, setIntroDone] = useState(
-    () =>
-      sessionStorage.getItem('hl-intro') === '1' ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-  // Kept mounted through its own exit (curtain-lift) animation: `introDone` flips
-  // as soon as the lift starts (to hand off to the hero timeline), which would
-  // otherwise cause React to unmount the overlay before the lift is visible.
-  const [showIntro, setShowIntro] = useState(() => !introDone);
-
   return (
-    <div className="min-h-screen flex flex-col bg-surface">
-      {showIntro && (
-        <IntroOverlay
-          onComplete={() => setIntroDone(true)}
-          onExited={() => setShowIntro(false)}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/portal/*"
+          element={<Suspense fallback={portalFallback}><PortalApp /></Suspense>}
         />
-      )}
-      <Navbar />
-      <main className="flex-1">
-        <Hero introReady={introDone} />
-        <About />
-        <Services />
-        <Portfolio />
-        <CTABanner />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
