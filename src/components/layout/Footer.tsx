@@ -37,7 +37,16 @@ export function Footer() {
           <div>
             <h4 className="label-style mb-4">Contact</h4>
             <ul className="space-y-3 text-sm text-white/55 font-light">
-              <li>{siteConfig.email}</li>
+              <li>
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-white transition-colors duration-200">
+                  {siteConfig.email}
+                </a>
+              </li>
+              <li>
+                <a href={`tel:${siteConfig.phoneHref}`} className="hover:text-white transition-colors duration-200">
+                  {siteConfig.phone}
+                </a>
+              </li>
               <li>{siteConfig.locations.perth}</li>
               <li>{siteConfig.locations.melbourne}</li>
             </ul>

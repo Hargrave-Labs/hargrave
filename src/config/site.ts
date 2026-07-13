@@ -8,8 +8,9 @@ export const siteConfig = {
   tagline: 'AI Automation & Digital Excellence',
   description:
     'Premium AI automation solutions and bespoke website design for businesses that demand excellence.',
-  email: 'hello@hargravelabs.com',
-  phone: '+61 8 1234 5678',
+  email: 'hargravelabs@gmail.com',
+  phone: '+61 469 726 872',
+  phoneHref: '+61469726872',
   locations: {
     perth: 'Perth, Western Australia',
     melbourne: 'Melbourne, Victoria',
