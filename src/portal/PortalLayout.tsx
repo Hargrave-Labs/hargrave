@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { useProfile } from './useRequests';
 import { siteConfig } from '../config/site';
+import { portalPath } from './routes';
 
 export default function PortalLayout() {
   const { session, signOut } = useAuth();
@@ -15,7 +16,7 @@ export default function PortalLayout() {
 
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#050706]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-          <Link to="/portal" className="text-sm font-semibold tracking-[-0.02em]">
+          <Link to={portalPath()} className="text-sm font-semibold tracking-[-0.02em]">
             {siteConfig.name} <span className="text-emerald-400">Portal</span>
           </Link>
           <div className="flex items-center gap-4">

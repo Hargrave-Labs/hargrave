@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { siteConfig, navLinks } from '../../config/site';
 import { GrainOverlay } from '../ui/GrainOverlay';
 import { scrollToSection } from '../../lib/utils';
+import { portalEntryHref } from '../../portal/routes';
 
 export function Footer() {
   return (
@@ -33,12 +33,12 @@ export function Footer() {
                 </li>
               ))}
               <li>
-                <Link
-                  to="/portal/login"
+                <a
+                  href={portalEntryHref()}
                   className="text-sm text-emerald-400/80 hover:text-emerald-300 transition-[color,transform] duration-200 ease-[var(--ease-out)] hover:translate-x-0.5 font-light"
                 >
                   Client Login
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

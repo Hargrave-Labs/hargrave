@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
+import { portalPath } from './routes';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function AuthCallback() {
 
       const { error: exErr } = await supabase.auth.exchangeCodeForSession(code);
       if (!exErr) {
-        navigate('/portal', { replace: true });
+        navigate(portalPath(), { replace: true });
         return;
       }
 
@@ -37,7 +38,7 @@ export default function AuthCallback() {
       // session. If one exists, proceed; otherwise surface the error.
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        navigate('/portal', { replace: true });
+        navigate(portalPath(), { replace: true });
       } else {
         setError('Your sign-in link is invalid or has expired. Please request a new one.');
       }
@@ -49,7 +50,7 @@ export default function AuthCallback() {
       {error ? (
         <div className="space-y-3">
           <p className="text-brand-200">{error}</p>
-          <a href="/portal/login" className="text-emerald-400 hover:text-emerald-300">Back to sign in</a>
+          <a href={portalPath('/login')} className="text-emerald-400 hover:text-emerald-300">Back to sign in</a>
         </div>
       ) : (
         <div className="flex items-center gap-3 text-brand-400">

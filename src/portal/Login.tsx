@@ -5,6 +5,7 @@ import { Input } from '../components/ui/Input';
 import { siteConfig } from '../config/site';
 import { PRIMARY_BTN } from './constants';
 import { cn } from '../lib/utils';
+import { portalPath } from './routes';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function Login() {
       email: email.trim(),
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/portal/auth/callback`,
+        emailRedirectTo: `${window.location.origin}${portalPath('/auth/callback')}`,
       },
     });
 

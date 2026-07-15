@@ -7,6 +7,7 @@ import StatusChip from './StatusChip';
 import { REQUEST_TYPES } from './constants';
 import type { RequestType } from './types';
 import PortalLoading from './PortalLoading';
+import { portalPath } from './routes';
 
 const typeLabel = (v: RequestType) => REQUEST_TYPES.find((t) => t.value === v)?.label ?? v;
 const isImage = (name: string) => /\.(png|jpe?g|gif|webp)$/i.test(name);
@@ -49,14 +50,14 @@ export default function RequestDetail() {
     return (
       <div className="space-y-3">
         <p className="text-brand-300">Request not found.</p>
-        <Link to="/portal" className="text-emerald-400 hover:text-emerald-300">← Back to requests</Link>
+        <Link to={portalPath()} className="text-emerald-400 hover:text-emerald-300">← Back to requests</Link>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Link to="/portal" className="text-sm text-brand-400 hover:text-white">← Back to requests</Link>
+      <Link to={portalPath()} className="text-sm text-brand-400 hover:text-white">← Back to requests</Link>
 
       <div className="mb-8 mt-4 flex items-start justify-between gap-4">
         <div>

@@ -1,11 +1,11 @@
 import { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '../../hooks/useGSAP';
 import { Container } from '../ui/Container';
 import { GrainOverlay } from '../ui/GrainOverlay';
 import { scrollToSection } from '../../lib/utils';
+import { portalEntryHref } from '../../portal/routes';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,9 +69,9 @@ export function CTABanner({
         </div>
         <p className="cta-anim mt-8 text-sm text-white/40">
           Already a client?{' '}
-          <Link to="/portal/login" className="text-emerald-400 hover:text-emerald-300 transition-colors duration-200">
+          <a href={portalEntryHref()} className="text-emerald-400 hover:text-emerald-300 transition-colors duration-200">
             Log in to your portal →
-          </Link>
+          </a>
         </p>
       </Container>
     </section>
