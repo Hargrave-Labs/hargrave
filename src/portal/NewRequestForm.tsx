@@ -13,6 +13,7 @@ import {
   PRIMARY_BTN,
 } from './constants';
 import type { RequestType } from './types';
+import { portalPath } from './routes';
 
 const labelCls = 'block text-sm text-brand-400 font-medium tracking-wide';
 const controlCls =
@@ -78,8 +79,13 @@ export default function NewRequestForm() {
       return;
     }
 
-    for (const file of files) {
-      const path = `${session.user.id}/${cr.id}/${file.name}`;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      // Supabase Storage keys reject spaces and most punctuation ("Invalid key"),
+      // so sanitize the key while keeping the original name for display.
+      const safeName =
+        file.name.normalize('NFKD').replace(/[^a-zA-Z0-9._-]+/g, '_').replace(/^_+|_+$/g, '') || 'file';
+      const path = `${session.user.id}/${cr.id}/${i}-${safeName}`;
       const { error: upErr } = await supabase.storage
         .from('cr-attachments')
         .upload(path, file, { upsert: false });
@@ -95,12 +101,12 @@ export default function NewRequestForm() {
       });
     }
 
-    navigate('/portal', { replace: true });
+    navigate(portalPath(), { replace: true });
   };
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Link to="/portal" className="text-sm text-brand-400 hover:text-white">← Back</Link>
+      <Link to={portalPath()} className="text-sm text-brand-400 hover:text-white">← Back</Link>
       <h1 className="mb-8 mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">New change request</h1>
 
       <form
