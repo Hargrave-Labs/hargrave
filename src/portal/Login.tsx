@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { supabase } from './lib/supabaseClient';
 import { Input } from '../components/ui/Input';
 import { siteConfig } from '../config/site';
+import { HLMark } from '../components/ui/HLMark';
 import { PRIMARY_BTN } from './constants';
 import { cn } from '../lib/utils';
 import { portalPath } from './routes';
@@ -41,6 +42,7 @@ export default function Login() {
       </div>
 
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl sm:p-10">
+        <HLMark className="mb-6 h-9 text-white" />
         <p className="label-style mb-3">Client Portal</p>
         <h1 className="text-2xl font-semibold tracking-[-0.03em] text-white">{siteConfig.name}</h1>
 
