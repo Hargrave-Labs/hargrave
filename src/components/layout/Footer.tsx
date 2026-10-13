@@ -11,8 +11,8 @@ export function Footer() {
       <div className="relative z-10 mx-auto max-w-[1600px] px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
           <div className="md:col-span-1">
-            <h3 className="flex items-center gap-2.5 text-lg font-semibold text-white mb-4 tracking-[-0.03em]">
-              <HLMark className="size-7" />
+            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4 tracking-[-0.03em]">
+              <HLMark className="h-[0.95em]" />
               {siteConfig.name}
             </h3>
             <p className="text-white/55 text-sm leading-relaxed max-w-xs font-light">

@@ -105,11 +105,11 @@ export function Navbar() {
                 href="#home"
                 onClick={(e) => { e.preventDefault(); scrollTo('#home'); }}
                 className={cn(
-                  'flex items-center gap-2.5 text-lg font-semibold tracking-[-0.03em] transition-colors duration-300 ease-[var(--ease-out)]',
+                  'flex items-center gap-2 text-lg font-semibold tracking-[-0.03em] transition-colors duration-300 ease-[var(--ease-out)]',
                   onDark ? 'text-white' : 'text-zinc-900'
                 )}
               >
-                <HLMark className="size-7" />
+                <HLMark className="h-[0.95em]" />
                 {siteConfig.name}
               </a>
 
